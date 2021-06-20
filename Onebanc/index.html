@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>OneBanc Transaction History</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <div id="app" class="container flex-center">
+      <h3>Transaction History</h3>
+      <div class="transaction-container">
+        <div class="header">
+          <img class="back-arrow" src="./assets/BackArrow.svg" />
+          <div class="avatar flex-center">
+            J
+          </div>
+          <div class="user-info">
+            <span>John Doe</span>
+            <span style="font-size: 0.6rem">+91 76722345</span>
+          </div>
+        </div>
+        <div class="scroll-area">
+          <ul v-if="isLoading" class="list-area">
+            <div class="loader">Loading...</div>
+          </ul>
+          <ul v-else class="list-area">
+            <li v-for="(item, index) in transactionData" :key="index" :class="item.messageType">
+              <div v-if="item.messageType === 'left'" class="left-card">
+                <div class="card-title flex-space-between">
+                  <span class="title-amount">{{ `₹ ${item.amount}` }}</span>
+                  <span class="title-status flex-center">
+                    <img :src="item.statusImage" />
+                    <span style="margin-left: 0.4rem" >
+                      {{ `${item.status}` }}
+                    </span>
+                  </span>
+                </div>
+                <div v-if="item.description.length" class="card-info">
+                  <span>{{ `${item.description}` }}</span>
+                </div>
+                <div class="flex-space-between">
+                  <div class="card-footer-left">
+                    <span v-if="item.status === 'Pending' && item.transactionType === 'Collect'" class="button-conatainer">
+                      <button class="card-button" style="margin: right 0.4rem;">Pay</button>
+                      <button class="card-button">Decline</button>
+                    </span>
+                    <span v-if="item.status === 'Confirmed'">{{ `Transaction Id: ${item.transactionId}` }}</span>
+                  </div>
+                  <span>
+                    <img src="./assets/RightChevron.svg" />
+                  </span>
+                </div>
+                <div style="left: 0.2rem; right: unset;" class="card-metadata">{{ item.date.toUTCString() }}</div>
+              </div>
+              <div v-if="item.messageType === 'right'" class="right-card">
+                <div class="card-title flex-space-between">
+                  <span class="title-amount">{{ `₹ ${item.amount}` }}</span>
+                  <span class="title-status flex-center">
+                    <img :src="item.statusImage" />
+                    <span style="margin-left: 0.4rem" >
+                      {{ `${item.status}` }}
+                    </span>
+                  </span>
+                </div>
+                <div v-if="item.description.length" class="card-info">
+                  <span>{{ `${item.description}` }}</span>
+                </div>
+                <div class="flex-space-between">
+                  <div class="card-footer-left">
+                    <span v-if="item.status === 'Pending' && item.transactionType === 'Collect'" class="button-conatainer">
+                      <button class="card-button">Cancel</button>
+                    </span>
+                    <span v-if="item.status === 'Confirmed'">{{ `Transaction Id: ${item.transactionId}` }}</span>
+                  </div>
+                  <span>
+                    <img src="./assets/RightChevron.svg" />
+                  </span>
+                </div>
+                <div class="card-metadata">{{ item.date.toUTCString() }}</div>
+              </div>
+              <div v-if="item.messageType === 'center'" class="date-container">
+                <span class="date-text">{{ item.date }}<span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>
